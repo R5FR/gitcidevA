@@ -33,4 +33,10 @@ function reset() {
   nextId = 1;
 }
 
-module.exports = { getTasks, addTask, reset };
+function toggleTask(id, tasks) {
+  for(i = 0; i < tasks.length; i++)
+      if(tasks[i].id == id) 
+        tasks[i].done = true;
+}
+
+module.exports = { getTasks, addTask, reset, toggleTask };
