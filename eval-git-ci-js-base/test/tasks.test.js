@@ -1,4 +1,4 @@
-const { getTasks, toggleTask, addTask, reset } = require('../lib/tasks');
+const { getTasks, toggleTask, addTask, reset, countDone } = require('../lib/tasks');
 
 
 beforeEach(() => {
@@ -86,16 +86,81 @@ describe('reset', () => {
   });
 });
 
-test('is toggle task to done', () => {
-  //Arrange
-  tasks = [
-    {
-      id:1,
-      name: "fake",
-      done: false
-    }
-  ]
-  
-  toggleTask(1, tasks)
-  expect(tasks[0].done).toBe(true);
+describe('toggleTask', () => {
+  test('toggles task done status from false to true', () => {
+    const task = addTask('Test task');
+    
+    const toggledTask = toggleTask(task.id);
+    
+    expect(toggledTask.done).toBe(true);
+    expect(toggledTask.id).toBe(task.id);
+    expect(toggledTask.name).toBe(task.name);
+  });
+
+  test('toggles task done status from true to false', () => {
+    const task = addTask('Test task');
+    toggleTask(task.id); // Set to true
+    
+    const toggledTask = toggleTask(task.id); // Toggle back to false
+    
+    expect(toggledTask.done).toBe(false);
+  });
+
+  test('throws error for non-existent task', () => {
+    expect(() => toggleTask(999)).toThrow('Task not found');
+  });
+
+  test('updates the task in the tasks list', () => {
+    const task = addTask('Test task');
+    toggleTask(task.id);
+    
+    const tasks = getTasks();
+    expect(tasks[0].done).toBe(true);
+  });
+});
+
+describe('countDone', () => {
+  test('returns 0 when no tasks are done', () => {
+    addTask('Task 1');
+    addTask('Task 2');
+    
+    expect(countDone()).toBe(0);
+  });
+
+  test('returns 0 when no tasks exist', () => {
+    expect(countDone()).toBe(0);
+  });
+
+  test('returns correct count when some tasks are done', () => {
+    const task1 = addTask('Task 1');
+    const task2 = addTask('Task 2');
+    const task3 = addTask('Task 3');
+    
+    toggleTask(task1.id);
+    toggleTask(task3.id);
+    
+    expect(countDone()).toBe(2);
+  });
+
+  test('returns correct count when all tasks are done', () => {
+    const task1 = addTask('Task 1');
+    const task2 = addTask('Task 2');
+    
+    toggleTask(task1.id);
+    toggleTask(task2.id);
+    
+    expect(countDone()).toBe(2);
+  });
+
+  test('updates count when task status changes', () => {
+    const task = addTask('Test task');
+    
+    expect(countDone()).toBe(0);
+    
+    toggleTask(task.id);
+    expect(countDone()).toBe(1);
+    
+    toggleTask(task.id);
+    expect(countDone()).toBe(0);
+  });
 });
