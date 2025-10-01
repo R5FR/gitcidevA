@@ -33,10 +33,18 @@ function reset() {
   nextId = 1;
 }
 
-function toggleTask(id, tasks) {
-  for(i = 0; i < tasks.length; i++)
-      if(tasks[i].id == id) 
-        tasks[i].done = true;
+function toggleTask(id) {
+  const task = tasks.find(task => task.id === id);
+  if (!task) {
+    throw new Error('Task not found');
+  }
+  
+  task.done = !task.done;
+  return task;
 }
 
-module.exports = { getTasks, addTask, reset, toggleTask };
+function countDone() {
+  return tasks.filter(task => task.done).length;
+}
+
+module.exports = { getTasks, addTask, reset, toggleTask, countDone };
