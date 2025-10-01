@@ -1,4 +1,5 @@
-const { getTasks, addTask, reset } = require('../lib/tasks');
+const { getTasks, toggleTask, addTask, reset } = require('../lib/tasks');
+
 
 beforeEach(() => {
   reset();
@@ -83,4 +84,18 @@ describe('reset', () => {
     const newTask = addTask('New task');
     expect(newTask.id).toBe(1);
   });
+});
+
+test('is toggle task to done', () => {
+  //Arrange
+  tasks = [
+    {
+      id:1,
+      name: "fake",
+      done: false
+    }
+  ]
+  
+  toggleTask(1, tasks)
+  expect(tasks[0].done).toBe(true);
 });
