@@ -23,6 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: eval-git-ci-js-base
 
       - name: Run Jest tests
         run: npm test
